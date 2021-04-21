@@ -1,5 +1,6 @@
 package com.demo.webflux.core;
 
+import com.demo.webflux.adapter.in.exception.NotFoundException;
 import com.demo.webflux.domain.Product;
 import com.demo.webflux.port.in.ProductPortIn;
 import com.demo.webflux.port.out.ProductDatabasePortOut;
@@ -8,6 +9,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
+
+import java.util.Optional;
 
 @Service
 public class ProductCore implements ProductPortIn {

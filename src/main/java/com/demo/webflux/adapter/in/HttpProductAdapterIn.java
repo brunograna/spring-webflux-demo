@@ -9,6 +9,7 @@ import org.springframework.web.util.UriComponentsBuilder;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
+import javax.validation.Valid;
 import java.net.URI;
 
 @RestController
@@ -32,7 +33,7 @@ public class HttpProductAdapterIn {
     }
 
     @PostMapping
-    public Mono<ResponseEntity<?>> findAll(@RequestBody ProductDto dto) {
+    public Mono<ResponseEntity<?>> findAll(@RequestBody @Valid ProductDto dto) {
         return this.productPortIn.save(dto.toDomain())
                 .map(this::buildUri)
                 .map(uri -> ResponseEntity.created(uri).build());
