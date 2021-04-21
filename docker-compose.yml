@@ -1,0 +1,14 @@
+version: '3.2'
+
+services:
+
+  mongodb:
+    image: mongo:latest
+    container_name: webflux-mongo-container
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: backend
+      MONGO_INITDB_ROOT_PASSWORD: secret
+      MONGO_INITDB_DATABASE: webflux-db
+    ports:
+      - 27017:27017

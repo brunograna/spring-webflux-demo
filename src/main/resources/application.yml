@@ -1,0 +1,5 @@
+
+spring:
+  data:
+    mongodb:
+      uri: mongodb://backend:secret@127.0.0.1:27017/webflux-db
