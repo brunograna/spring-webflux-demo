@@ -1,5 +1,13 @@
 
 spring:
+  main:
+    banner-mode: "off"
   data:
     mongodb:
-      uri: mongodb://backend:secret@127.0.0.1:27017/webflux-db
+      auto-index-creation: true
+      database: webflux-db
+      uri: mongodb://backend:secret@localhost:27017/admin
+  application:
+    name: webflux
+  profiles:
+    active: dev
