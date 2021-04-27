@@ -11,11 +11,6 @@ import java.util.Set;
 
 public class TreatableConstraintViolationException extends ConstraintViolationException implements TreatableException {
 
-    public TreatableConstraintViolationException(String message,
-                                                 Set<? extends ConstraintViolation<?>> constraintViolations) {
-        super(message, constraintViolations);
-    }
-
     public TreatableConstraintViolationException(Set<? extends ConstraintViolation<?>> constraintViolations) {
         super(constraintViolations);
     }
@@ -25,7 +20,8 @@ public class TreatableConstraintViolationException extends ConstraintViolationEx
         serverWebExchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
 
         var message = this.getConstraintViolations().stream()
-                .map(violation -> violation.getPropertyPath() + " " + violation.getMessage()).findFirst()
+                .map(violation -> violation.getPropertyPath() + " " + violation.getMessage())
+                .findFirst()
                 .orElse("invalid data");
 
         return serverWebExchange.getResponse().writeWith(Mono.just(bodyWrapper.wrap(new ErrorDto(message))));

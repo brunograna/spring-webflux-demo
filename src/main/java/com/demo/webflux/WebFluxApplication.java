@@ -27,7 +27,7 @@ public class WebFluxApplication implements CommandLineRunner {
 		this.productRepository.deleteAll()
 				.thenMany(
 						Flux.just("Computer", "Cellphone", "Notebook", "Charger", "Monitor", "TV")
-						.map(name -> new Product(UUID.randomUUID().toString(), name))
+						.map(name -> new Product(UUID.randomUUID().toString(), name, 1))
 				)
 				.flatMap(productRepository::save)
 				.subscribe(System.out::println);

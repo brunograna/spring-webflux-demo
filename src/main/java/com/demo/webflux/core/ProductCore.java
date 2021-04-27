@@ -1,6 +1,6 @@
 package com.demo.webflux.core;
 
-import com.demo.webflux.adapter.in.exception.NotFoundException;
+import com.demo.webflux.domain.NotFoundException;
 import com.demo.webflux.domain.Product;
 import com.demo.webflux.port.in.ProductPortIn;
 import com.demo.webflux.port.out.ProductDatabasePortOut;

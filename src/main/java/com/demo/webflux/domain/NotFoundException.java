@@ -1,5 +1,7 @@
-package com.demo.webflux.adapter.in.exception;
+package com.demo.webflux.domain;
 
+import com.demo.webflux.adapter.in.exception.BodyWrapper;
+import com.demo.webflux.adapter.in.exception.TreatableException;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
@@ -7,14 +9,7 @@ import reactor.core.publisher.Mono;
 public class NotFoundException extends Exception implements TreatableException {
 
     public NotFoundException() {
-    }
-
-    public NotFoundException(String message) {
-        super(message);
-    }
-
-    public NotFoundException(String message, Throwable cause) {
-        super(message, cause);
+        // Indicates whether an entity is not found on persistence layer
     }
 
     @Override

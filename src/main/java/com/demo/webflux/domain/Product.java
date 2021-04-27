@@ -11,13 +11,15 @@ public class Product {
     @Id
     private String id;
     private String name;
+    private Integer quantity;
 
     public Product() {
     }
 
-    public Product(String id, String name) {
+    public Product(String id, String name, Integer quantity) {
         this.id = id;
         this.name = name;
+        this.quantity = quantity;
     }
 
     public String getId() {
@@ -38,11 +40,21 @@ public class Product {
         return this;
     }
 
+    public Integer getQuantity() {
+        return quantity;
+    }
+
+    public Product setQuantity(Integer quantity) {
+        this.quantity = quantity;
+        return this;
+    }
+
     @Override
     public String toString() {
         return "Product{" +
                 "id='" + id + '\'' +
                 ", name='" + name + '\'' +
+                ", quantity=" + quantity +
                 '}';
     }
 }

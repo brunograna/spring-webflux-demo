@@ -1,4 +1,4 @@
-package com.demo.webflux.commons;
+package com.demo.webflux.adapter.in.dto;
 
 import com.demo.webflux.adapter.in.exception.TreatableConstraintViolationException;
 
@@ -9,8 +9,8 @@ public abstract class SelfValidator<T> {
     
     private final Validator validator;
     
-    public SelfValidator() {
-        ValidatorFactory factory = Validation.buildDefaultValidatorFactory();
+    protected SelfValidator() {
+        var factory = Validation.buildDefaultValidatorFactory();
         validator = factory.getValidator();
     }
     

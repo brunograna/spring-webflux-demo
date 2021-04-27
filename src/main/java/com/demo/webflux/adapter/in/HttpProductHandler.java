@@ -1,13 +1,12 @@
 package com.demo.webflux.adapter.in;
 
 import com.demo.webflux.adapter.in.dto.ProductDto;
+import com.demo.webflux.domain.NotFoundException;
 import com.demo.webflux.domain.Product;
 import com.demo.webflux.port.in.ProductPortIn;
 import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.BodyInserters;
-import org.springframework.web.reactive.function.server.EntityResponse;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
