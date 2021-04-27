@@ -11,7 +11,6 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
 
-import javax.validation.Valid;
 import java.net.URI;
 import java.time.Duration;
 
@@ -40,12 +39,14 @@ public class HttpProductAdapterIn {
     }
 
     @GetMapping("{id}")
-    public Mono<Product> findAll(@PathVariable("id") String id) {
-        return this.productPortIn.findById(id);
+    public Mono<ResponseEntity<Product>> findById(@PathVariable("id") String id) {
+        return this.productPortIn.findById(id)
+                .map(ResponseEntity::ok);
     }
 
     @PostMapping
-    public Mono<ResponseEntity<?>> findAll(@RequestBody @Valid ProductDto dto) {
+    public Mono<ResponseEntity<?>> save(@RequestBody ProductDto dto) {
+        dto.confirmIsValid();
         return this.productPortIn.save(dto.toDomain())
                 .map(this::buildUri)
                 .map(uri -> ResponseEntity.created(uri).build());

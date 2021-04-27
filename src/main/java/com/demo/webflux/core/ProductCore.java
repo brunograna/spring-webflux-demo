@@ -10,7 +10,6 @@ import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 
-import java.util.Optional;
 
 @Service
 public class ProductCore implements ProductPortIn {
@@ -37,7 +36,8 @@ public class ProductCore implements ProductPortIn {
     public Mono<Product> findById(String id) {
         this.logger.info("find-by-id; start; id=\"{}\";", id);
 
-        var result = this.database.findById(id);
+        var result = this.database.findById(id)
+                .switchIfEmpty(Mono.error(new NotFoundException()));
 
         this.logger.info("find-by-id; end; success; id=\"{}\";", id);
 

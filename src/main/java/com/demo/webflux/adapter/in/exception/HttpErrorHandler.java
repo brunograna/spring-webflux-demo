@@ -1,23 +1,40 @@
 package com.demo.webflux.adapter.in.exception;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpStatus;
-import org.springframework.stereotype.Component;
-import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
-import org.springframework.web.reactive.function.server.ServerResponse;
+import org.springframework.http.MediaType;
+import org.springframework.web.server.ServerWebExchange;
+import reactor.core.publisher.Mono;
 
-@Component
-public class HttpErrorHandler {
 
-    private final Logger logger = LoggerFactory.getLogger(this.getClass());
+@Configuration
+@Order(-2)
+public class HttpErrorHandler implements ErrorWebExceptionHandler {
 
-    @ResponseStatus(
-            value = HttpStatus.NOT_FOUND,
-            reason = "Not Found")
-    @ExceptionHandler(NotFoundException.class)
-    public void notFoundHandler() {
-        logger.error("not-found");
+    private final BodyWrapper bodyWrapper;
+
+    public HttpErrorHandler(final BodyWrapper bodyWrapper) {
+        this.bodyWrapper = bodyWrapper;
     }
+
+    @Override
+    public Mono<Void> handle(ServerWebExchange serverWebExchange, Throwable throwable) {
+
+        serverWebExchange.getResponse().getHeaders().setContentType(MediaType.APPLICATION_JSON);
+
+        if (throwable instanceof TreatableException) {
+            return ((TreatableException) throwable).handle(serverWebExchange, bodyWrapper);
+        }
+
+        return this.handleNotTreatedException(serverWebExchange);
+    }
+
+    private Mono<Void> handleNotTreatedException(ServerWebExchange serverWebExchange) {
+        serverWebExchange.getResponse().setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
+
+        return serverWebExchange.getResponse().writeWith(Mono.empty());
+    }
+
 }
