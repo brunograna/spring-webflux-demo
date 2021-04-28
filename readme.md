@@ -3,7 +3,7 @@
 </h1>
 
 <h3 align="center">
-  Projeto: Spring WebFlux
+  Project: Spring WebFlux Demo
 </h3>
 
 <p align="center">

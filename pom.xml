@@ -12,7 +12,7 @@
 	<artifactId>webflux</artifactId>
 	<version>1.0.0</version>
 	<name>Spring WebFlux</name>
-	<description>Demo project for Spring Boot with Webflux</description>
+	<description>Demo project for Spring Boot with WebFlux</description>
 	<properties>
 		<java.version>11</java.version>
 	</properties>
