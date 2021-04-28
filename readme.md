@@ -68,4 +68,4 @@ properties:
 
 ---
 
-Developed by Bruno Garcia :wave: [Know more of me in my LinkedIn](https://www.linkedin.com/in/dev-brunogarcia/)
+Developed by Bruno Garcia :wave: [More about me](https://www.linkedin.com/in/dev-brunogarcia/)
