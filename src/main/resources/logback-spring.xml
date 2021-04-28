@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<include resource="org/springframework/boot/logging/logback/defaults.xml" />
+
+	<statusListener class="ch.qos.logback.core.status.NopStatusListener" />
+	<springProperty scope="context" name="springAppName" source="spring.application.name"/>
+
+	<property name="CONSOLE_LOG_PATTERN"
+			  value="%clr(%d{yyyy-MM-dd HH:mm:ss.SSS}){faint} %clr(%5p) %clr([${springAppName:-},%X{X-B3-TraceId:-},%X{X-B3-SpanId:-}]) %clr([%-15.15t]){faint} %clr([%-40.40logger{39}]){cyan} %clr(:){faint} %m%n${LOG_EXCEPTION_CONVERSION_WORD:-%wEx}"/>
+
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<filter class="ch.qos.logback.classic.filter.ThresholdFilter">
+			<level>${level_root}</level>
+		</filter>
+		<encoder>
+			<pattern>${CONSOLE_LOG_PATTERN}</pattern>
+			<charset>utf8</charset>
+		</encoder>
+	</appender>
+
+	<appender name="TIME_BASED_FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>/app-logs/adapter-successfactors-ms/adapter-successfactors-ms.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<!-- daily rollover -->
+			<fileNamePattern>/app-logs/spring-webflux-demo/spring-webflux-demo.%d{yyyy-MM-dd}.log.zip</fileNamePattern>
+			<maxHistory>30</maxHistory>
+		</rollingPolicy>
+
+		<encoder>
+			<pattern>${CONSOLE_LOG_PATTERN}</pattern>
+		</encoder>
+	</appender>
+
+	<root level="INFO">
+		<appender-ref ref="console" />
+		<appender-ref ref="TIME_BASED_FILE"/>
+	</root>
+</configuration>

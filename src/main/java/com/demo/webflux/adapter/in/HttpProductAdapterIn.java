@@ -1,7 +1,6 @@
 package com.demo.webflux.adapter.in;
 
 import com.demo.webflux.adapter.in.dto.ProductDto;
-import com.demo.webflux.domain.NotFoundException;
 import com.demo.webflux.domain.Product;
 import com.demo.webflux.port.in.ProductPortIn;
 import org.springframework.http.MediaType;
@@ -12,6 +11,7 @@ import reactor.core.publisher.Flux;
 import reactor.core.publisher.Mono;
 import reactor.util.function.Tuple2;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.time.Duration;
 
@@ -46,8 +46,7 @@ public class HttpProductAdapterIn {
     }
 
     @PostMapping
-    public Mono<ResponseEntity<?>> save(@RequestBody ProductDto dto) {
-        dto.confirmIsValid();
+    public Mono<ResponseEntity<?>> save(@RequestBody @Valid ProductDto dto) {
         return this.productPortIn.save(dto.toDomain())
                 .map(this::buildUri)
                 .map(uri -> ResponseEntity.created(uri).build());

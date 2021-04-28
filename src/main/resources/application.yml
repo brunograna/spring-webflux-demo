@@ -8,6 +8,6 @@ spring:
       database: webflux-db
       uri: mongodb://backend:secret@localhost:27017/admin
   application:
-    name: webflux
+    name: spring-webflux-demo
   profiles:
     active: dev
