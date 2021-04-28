@@ -1,8 +1,9 @@
 package com.demo.webflux.adapter.in.dto;
 
-import com.demo.webflux.adapter.in.exception.TreatableConstraintViolationException;
-
-import javax.validation.*;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
+import javax.validation.Validation;
+import javax.validation.Validator;
 import java.util.Set;
 
 public abstract class SelfValidator<T> {
@@ -17,7 +18,7 @@ public abstract class SelfValidator<T> {
     public void confirmIsValid() throws ConstraintViolationException {
         Set<ConstraintViolation<T>> violations = validator.validate((T) this);
         if (!violations.isEmpty()) {
-            throw new TreatableConstraintViolationException(violations);
+            throw new ConstraintViolationException(violations);
         }
     }
 }

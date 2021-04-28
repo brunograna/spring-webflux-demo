@@ -1,12 +1,15 @@
 package com.demo.webflux.adapter.in.exception;
 
+import com.demo.webflux.domain.NotFoundException;
 import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
+
+import javax.validation.ConstraintViolationException;
+import java.util.Map;
 
 
 @Configuration
@@ -14,9 +17,14 @@ import reactor.core.publisher.Mono;
 public class HttpErrorHandler implements ErrorWebExceptionHandler {
 
     private final BodyWrapper bodyWrapper;
+    private final Map<Class<?>, ExceptionHandler> handlers;
 
     public HttpErrorHandler(final BodyWrapper bodyWrapper) {
         this.bodyWrapper = bodyWrapper;
+        this.handlers = Map.of(
+                ConstraintViolationException.class, new ConstraintViolationExceptionHandler(),
+                NotFoundException.class, new NotFoundExceptionHandler()
+        );
     }
 
     @Override
@@ -24,17 +32,9 @@ public class HttpErrorHandler implements ErrorWebExceptionHandler {
 
         serverWebExchange.getResponse().getHeaders().setContentType(MediaType.APPLICATION_JSON);
 
-        if (throwable instanceof TreatableException) {
-            return ((TreatableException) throwable).handle(serverWebExchange, bodyWrapper);
-        }
+        var handler = this.handlers.getOrDefault(throwable.getClass(), new DefaultExceptionHandler());
 
-        return this.handleNotTreatedException(serverWebExchange);
-    }
-
-    private Mono<Void> handleNotTreatedException(ServerWebExchange serverWebExchange) {
-        serverWebExchange.getResponse().setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR);
-
-        return serverWebExchange.getResponse().writeWith(Mono.empty());
+        return handler.handle(throwable, serverWebExchange, bodyWrapper);
     }
 
 }

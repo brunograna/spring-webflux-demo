@@ -23,7 +23,7 @@ public class BodyWrapper {
         try {
             return this.bufferFactory.wrap(objectMapper.writeValueAsBytes(error));
         } catch (JsonProcessingException e) {
-            return bufferFactory.wrap("".getBytes());
+            return bufferFactory.wrap("Error occurred in writing response, please contact the administrators.".getBytes());
         }
     }
 }

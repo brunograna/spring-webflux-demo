@@ -5,21 +5,20 @@ import org.springframework.http.HttpStatus;
 import org.springframework.web.server.ServerWebExchange;
 import reactor.core.publisher.Mono;
 
-import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
-import java.util.Set;
 
-public class TreatableConstraintViolationException extends ConstraintViolationException implements TreatableException {
-
-    public TreatableConstraintViolationException(Set<? extends ConstraintViolation<?>> constraintViolations) {
-        super(constraintViolations);
-    }
+public class ConstraintViolationExceptionHandler implements ExceptionHandler {
 
     @Override
-    public Mono<Void> handle(ServerWebExchange serverWebExchange, BodyWrapper bodyWrapper) {
+    public Mono<Void> handle(Throwable throwable,
+                             ServerWebExchange serverWebExchange,
+                             BodyWrapper bodyWrapper) {
+
+        var castedException = (ConstraintViolationException) throwable;
+
         serverWebExchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
 
-        var message = this.getConstraintViolations().stream()
+        var message = castedException.getConstraintViolations().stream()
                 .map(violation -> violation.getPropertyPath() + " " + violation.getMessage())
                 .findFirst()
                 .orElse("invalid data");
