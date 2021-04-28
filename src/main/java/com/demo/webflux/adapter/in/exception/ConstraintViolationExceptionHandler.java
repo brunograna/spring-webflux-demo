@@ -1,28 +1,33 @@
 package com.demo.webflux.adapter.in.exception;
 
 import com.demo.webflux.adapter.in.dto.ErrorDto;
-import org.springframework.http.HttpStatus;
-import org.springframework.web.server.ServerWebExchange;
+import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.http.ResponseEntity;
 import reactor.core.publisher.Mono;
 
 import javax.validation.ConstraintViolationException;
 
-public class ConstraintViolationExceptionHandler implements ExceptionHandler {
+public class ConstraintViolationExceptionHandler implements HttpExceptionHandler<ConstraintViolationException> {
+
+    private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
-    public Mono<Void> handle(Throwable throwable,
-                             ServerWebExchange serverWebExchange,
-                             BodyWrapper bodyWrapper) {
+    public Mono<ResponseEntity<ErrorDto>> handle(ConstraintViolationException exception) {
+        logger.error("handle; exception=\"{}\";", ExceptionUtils.getStackTrace(exception));
+        return Mono.just(
+                ResponseEntity
+                        .badRequest()
+                        .body(this.buildBody(exception))
+        );
+    }
 
-        var castedException = (ConstraintViolationException) throwable;
-
-        serverWebExchange.getResponse().setStatusCode(HttpStatus.BAD_REQUEST);
-
-        var message = castedException.getConstraintViolations().stream()
+    private ErrorDto buildBody(ConstraintViolationException exception) {
+        return exception.getConstraintViolations().stream()
                 .map(violation -> violation.getPropertyPath() + " " + violation.getMessage())
                 .findFirst()
-                .orElse("invalid data");
-
-        return serverWebExchange.getResponse().writeWith(Mono.just(bodyWrapper.wrap(new ErrorDto(message))));
+                .map(ErrorDto::new)
+                .orElse(new ErrorDto("invalid data"));
     }
 }

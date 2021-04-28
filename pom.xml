@@ -33,6 +33,13 @@
 		</dependency>
 		<!-- spring -->
 
+		<!-- helper -->
+		<dependency>
+			<groupId>org.apache.commons</groupId>
+			<artifactId>commons-lang3</artifactId>
+		</dependency>
+		<!-- helper -->
+
 		<!-- test -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

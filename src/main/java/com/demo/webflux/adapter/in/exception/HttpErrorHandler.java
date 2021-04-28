@@ -1,40 +1,30 @@
 package com.demo.webflux.adapter.in.exception;
 
+import com.demo.webflux.adapter.in.dto.ErrorDto;
 import com.demo.webflux.domain.NotFoundException;
-import org.springframework.boot.web.reactive.error.ErrorWebExceptionHandler;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
-import org.springframework.http.MediaType;
-import org.springframework.web.server.ServerWebExchange;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.ControllerAdvice;
+import org.springframework.web.bind.annotation.ExceptionHandler;
 import reactor.core.publisher.Mono;
 
 import javax.validation.ConstraintViolationException;
-import java.util.Map;
 
 
-@Configuration
-@Order(-2)
-public class HttpErrorHandler implements ErrorWebExceptionHandler {
+@ControllerAdvice
+public class HttpErrorHandler {
 
-    private final BodyWrapper bodyWrapper;
-    private final Map<Class<?>, ExceptionHandler> handlers;
-
-    public HttpErrorHandler(final BodyWrapper bodyWrapper) {
-        this.bodyWrapper = bodyWrapper;
-        this.handlers = Map.of(
-                ConstraintViolationException.class, new ConstraintViolationExceptionHandler(),
-                NotFoundException.class, new NotFoundExceptionHandler()
-        );
+    @ExceptionHandler(Exception.class)
+    public Mono<ResponseEntity<ErrorDto>> handleException(Exception ex) {
+        return new DefaultExceptionHandler().handle(ex);
     }
 
-    @Override
-    public Mono<Void> handle(ServerWebExchange serverWebExchange, Throwable throwable) {
-
-        serverWebExchange.getResponse().getHeaders().setContentType(MediaType.APPLICATION_JSON);
-
-        var handler = this.handlers.getOrDefault(throwable.getClass(), new DefaultExceptionHandler());
-
-        return handler.handle(throwable, serverWebExchange, bodyWrapper);
+    @ExceptionHandler(ConstraintViolationException.class)
+    public Mono<ResponseEntity<ErrorDto>> handleConstraintViolationException(ConstraintViolationException ex) {
+        return new ConstraintViolationExceptionHandler().handle(ex);
     }
 
+    @ExceptionHandler(NotFoundException.class)
+    public Mono<ResponseEntity<ErrorDto>> handleNotFoundException(NotFoundException ex) {
+        return new NotFoundExceptionHandler().handle(ex);
+    }
 }
