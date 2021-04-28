@@ -1,5 +1,5 @@
 <h1 align="center">
-    <img alt="Star Wars Ms" src="https://github.com/brunograna/Spring-WebFlux/blob/master/spring-webflux-logo.png" width="300px" />
+    <img alt="Spring WebFlux" src="https://github.com/brunograna/Spring-WebFlux/blob/master/spring-webflux-logo.png" width="300px" />
 </h1>
 
 <h3 align="center">
@@ -15,19 +15,19 @@
 
 </p>
 
-## :rocket: Features do Projeto (in progress)
+## :rocket: Project Features (in progress)
 
 * RestFull Reactive API utilizando:
     * Annotations
     * Handlers & Routers
 
-:mag: Baixe o projeto e teste você mesmo.
+:mag: Download the project and test by yourself.
 
-## :dart: Objetivos do desenvolvimento
+## :dart: Development objective
 
-- Utilizar o Java 11 com Spring Boot 2.4.5 com WebFlux e JUnit 5
-- Desenvolver uma *api rest* utilizando a Arquitetura Hexagonal (*Ports and Adapters Architecture*)
-- Consumir uma api externa _(in progress)_
+- Java 11 with Spring Boot 2.4.5 and WebFlux and JUnit 5
+- Develop a *Restfull API* utilizing Ports and Adapters Architecture
+- Consume an external API _(in progress)_
 
 ## :file_folder: Resources
 
@@ -60,12 +60,12 @@ type: object
 properties:
   id:
     type: string
-    description: identificador do produto
+    description: product identifier
   name:
     type: string
-    description: nome do produto
+    description: product name
 ```
 
 ---
 
-Desenvolvido por Bruno Garcia :wave: [Conheça mais sobre o meu trabalho no Linkedin](https://www.linkedin.com/in/dev-brunogarcia/)
+Developed by Bruno Garcia :wave: [Know more of me in my LinkedIn](https://www.linkedin.com/in/dev-brunogarcia/)
