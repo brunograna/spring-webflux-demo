@@ -54,4 +54,17 @@ public class ProductCore implements ProductPortIn {
 
         return result;
     }
+
+    @Override
+    public Mono<Void> deleteById(String id) {
+        this.logger.info("delete-by-id; start; id=\"{}\";", id);
+
+        var result= this.database.findById(id)
+                .switchIfEmpty(Mono.error(new NotFoundException()))
+                .flatMap(product -> this.database.deleteById(id));
+
+        this.logger.info("delete-by-id; end; success; id=\"{}\";", id);
+
+        return result;
+    }
 }

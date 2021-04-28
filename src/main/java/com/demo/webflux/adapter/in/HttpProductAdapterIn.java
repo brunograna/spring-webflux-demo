@@ -45,8 +45,14 @@ public class HttpProductAdapterIn {
                 .map(ResponseEntity::ok);
     }
 
+    @DeleteMapping("{id}")
+    public Mono<ResponseEntity<Void>> deleteById(@PathVariable("id") String id) {
+        return this.productPortIn.deleteById(id)
+                .thenReturn(ResponseEntity.noContent().build());
+    }
+
     @PostMapping
-    public Mono<ResponseEntity<?>> save(@RequestBody @Valid ProductDto dto) {
+    public Mono<ResponseEntity<Void>> save(@RequestBody @Valid ProductDto dto) {
         return this.productPortIn.save(dto.toDomain())
                 .map(this::buildUri)
                 .map(uri -> ResponseEntity.created(uri).build());

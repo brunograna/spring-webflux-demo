@@ -31,4 +31,9 @@ public class MongoProductAdapterOut implements ProductDatabasePortOut {
         return this.repository.save(p)
                 .map(Product::getId);
     }
+
+    @Override
+    public Mono<Void> deleteById(String id) {
+        return this.repository.deleteById(id);
+    }
 }

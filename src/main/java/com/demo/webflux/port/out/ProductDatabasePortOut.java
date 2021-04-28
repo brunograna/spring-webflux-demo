@@ -9,4 +9,5 @@ public interface ProductDatabasePortOut {
     Flux<Product> findAll();
     Mono<Product> findById(String id);
     Mono<String> save(Product p);
+    Mono<Void> deleteById(String id);
 }
