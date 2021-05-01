@@ -17,7 +17,7 @@
 
 ## :rocket: Project Features (in progress)
 
-* RestFull Reactive API utilizando:
+* RestFull Reactive API using:
     * Annotations
     * Handlers & Routers
 
