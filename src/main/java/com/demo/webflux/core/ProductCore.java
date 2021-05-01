@@ -1,7 +1,9 @@
 package com.demo.webflux.core;
 
 import com.demo.webflux.domain.NotFoundException;
+import com.demo.webflux.domain.PageDto;
 import com.demo.webflux.domain.Product;
+import com.demo.webflux.domain.QueryDto;
 import com.demo.webflux.port.in.ProductPortIn;
 import com.demo.webflux.port.out.ProductDatabasePortOut;
 import org.slf4j.Logger;
@@ -19,6 +21,17 @@ public class ProductCore implements ProductPortIn {
 
     public ProductCore(final ProductDatabasePortOut database) {
         this.database = database;
+    }
+
+    @Override
+    public Mono<PageDto<Product>> findAll(QueryDto queryDto) {
+        this.logger.info("find-all; start;");
+
+        var result = this.database.findAll(queryDto);
+
+        this.logger.info("find-all; end; success;");
+
+        return result;
     }
 
     @Override

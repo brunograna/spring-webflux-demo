@@ -2,6 +2,8 @@ package com.demo.webflux;
 
 import com.demo.webflux.domain.Product;
 import com.demo.webflux.repository.ProductRepository;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,6 +15,7 @@ import java.util.UUID;
 public class WebFluxApplication implements CommandLineRunner {
 
 	private final ProductRepository productRepository;
+	private static final Logger logger = LoggerFactory.getLogger(WebFluxApplication.class);
 
 	public WebFluxApplication(ProductRepository productRepository) {
 		this.productRepository = productRepository;
@@ -30,6 +33,6 @@ public class WebFluxApplication implements CommandLineRunner {
 						.map(name -> new Product(UUID.randomUUID().toString(), name, 1))
 				)
 				.flatMap(productRepository::save)
-				.subscribe(System.out::println);
+				.subscribe(product -> logger.info("Saving on database: {}", product));
 	}
 }
