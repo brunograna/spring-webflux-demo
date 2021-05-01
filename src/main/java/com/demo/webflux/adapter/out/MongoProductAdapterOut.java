@@ -7,7 +7,6 @@ import com.demo.webflux.port.out.ProductDatabasePortOut;
 import com.demo.webflux.repository.ProductRepository;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.mongodb.core.ReactiveMongoTemplate;
-import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 import org.springframework.stereotype.Service;
 import reactor.core.publisher.Flux;
@@ -16,8 +15,6 @@ import reactor.util.function.Tuple2;
 import reactor.util.function.Tuple3;
 
 import java.util.List;
-
-import static org.apache.commons.lang3.ObjectUtils.isEmpty;
 
 @Service
 public class MongoProductAdapterOut implements ProductDatabasePortOut {
@@ -33,8 +30,7 @@ public class MongoProductAdapterOut implements ProductDatabasePortOut {
 
     @Override
     public Mono<PageDto<Product>> findAll(QueryDto queryDto) {
-        return Mono.just(queryDto)
-                .map(this::buildQueryWithFilters)
+        return Mono.just(queryDto.toQuery())
                 .flatMap(this::retrieveCountByQuery)
                 .map(queryAndTotal -> this.buildDatabaseQueryWithPagination(queryDto, queryAndTotal))
                 .flatMap(this::findAllUsingQuery)
@@ -60,16 +56,6 @@ public class MongoProductAdapterOut implements ProductDatabasePortOut {
     @Override
     public Mono<Void> deleteById(String id) {
         return this.repository.deleteById(id);
-    }
-
-    private Query buildQueryWithFilters(QueryDto queryDto) {
-        var query = new Query();
-
-        if (!isEmpty(queryDto.getName())) {
-            query.addCriteria(Criteria.where("name").is(queryDto.getName()));
-        }
-
-        return query;
     }
 
     private Tuple3<Query, Long, Long> buildDatabaseQueryWithPagination(QueryDto queryDto,

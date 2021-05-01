@@ -1,8 +1,13 @@
 package com.demo.webflux.domain;
 
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
+
 import javax.validation.constraints.Max;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.PositiveOrZero;
+
+import static org.apache.commons.lang3.ObjectUtils.isEmpty;
 
 public class QueryDto {
 
@@ -31,5 +36,15 @@ public class QueryDto {
 
     public String getName() {
         return name;
+    }
+
+    public Query toQuery() {
+        var query = new Query();
+
+        if (!isEmpty(this.getName())) {
+            query.addCriteria(Criteria.where("name").is(this.getName()));
+        }
+
+        return query;
     }
 }
