@@ -6,7 +6,6 @@ import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
-import reactor.core.publisher.Mono;
 
 import javax.validation.ConstraintViolationException;
 
@@ -15,13 +14,11 @@ public class ConstraintViolationExceptionHandler implements HttpExceptionHandler
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
-    public Mono<ResponseEntity<ErrorDto>> handle(ConstraintViolationException exception) {
+    public ResponseEntity<ErrorDto> handle(ConstraintViolationException exception) {
         logger.error("handle; exception=\"{}\";", ExceptionUtils.getStackTrace(exception));
-        return Mono.just(
-                ResponseEntity
-                        .badRequest()
-                        .body(this.buildBody(exception))
-        );
+        return ResponseEntity
+                    .badRequest()
+                    .body(this.buildBody(exception));
     }
 
     private ErrorDto buildBody(ConstraintViolationException exception) {

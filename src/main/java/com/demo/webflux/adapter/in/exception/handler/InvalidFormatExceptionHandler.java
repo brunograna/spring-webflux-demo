@@ -4,18 +4,15 @@ import com.demo.webflux.adapter.in.dto.ErrorDto;
 import com.demo.webflux.adapter.in.exception.HttpExceptionHandler;
 import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import org.springframework.http.ResponseEntity;
-import reactor.core.publisher.Mono;
 
 import java.util.Optional;
 
 public class InvalidFormatExceptionHandler implements HttpExceptionHandler<InvalidFormatException> {
 
     @Override
-    public Mono<ResponseEntity<ErrorDto>> handle(InvalidFormatException exception) {
-        return Mono.just(
-                ResponseEntity.badRequest()
-                .body(this.buildBody(exception))
-        );
+    public ResponseEntity<ErrorDto> handle(InvalidFormatException exception) {
+        return ResponseEntity.badRequest()
+                .body(this.buildBody(exception));
     }
 
     private ErrorDto buildBody(InvalidFormatException exception) {

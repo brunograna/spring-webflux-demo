@@ -7,7 +7,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.support.WebExchangeBindException;
-import reactor.core.publisher.Mono;
 
 import java.util.Optional;
 
@@ -16,13 +15,11 @@ public class WebExchangeBindExceptionHandler implements HttpExceptionHandler<Web
     private final Logger logger = LoggerFactory.getLogger(this.getClass());
 
     @Override
-    public Mono<ResponseEntity<ErrorDto>> handle(WebExchangeBindException exception) {
+    public ResponseEntity<ErrorDto> handle(WebExchangeBindException exception) {
         logger.error("handle; exception=\"{}\";", ExceptionUtils.getStackTrace(exception));
-        return Mono.just(
-                ResponseEntity
-                        .badRequest()
-                        .body(this.buildBody(exception))
-        );
+        return ResponseEntity
+                    .badRequest()
+                    .body(this.buildBody(exception));
     }
 
     private ErrorDto buildBody(WebExchangeBindException exception) {
