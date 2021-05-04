@@ -11,3 +11,9 @@ spring:
     name: spring-webflux-demo
   profiles:
     active: dev
+
+app:
+  swapi:
+    base-path: https://swapi.dev/api/
+    resources:
+      planets: planets/

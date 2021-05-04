@@ -27,7 +27,7 @@
 
 - Java 11 with Spring Boot 2.4.5 and WebFlux and JUnit 5
 - Develop a *Restfull API* utilizing Ports and Adapters Architecture
-- Consume an external API _(in progress)_
+- Consume an external API
 
 ## :file_folder: Resources
 
