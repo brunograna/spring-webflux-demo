@@ -12,5 +12,6 @@ public interface ProductPortIn {
     Flux<Product> findAll();
     Mono<Product> findById(String id);
     Mono<String> save(Product p);
+    Mono<Void> update(String id, Product p);
     Mono<Void> deleteById(String id);
 }

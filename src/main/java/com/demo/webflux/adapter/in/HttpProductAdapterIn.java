@@ -67,6 +67,12 @@ public class HttpProductAdapterIn {
                 .map(uri -> ResponseEntity.created(uri).build());
     }
 
+    @PutMapping("{id}")
+    public Mono<ResponseEntity<Void>> update(@PathVariable("id") String id, @RequestBody @Valid ProductDto dto) {
+        return this.productPortIn.update(id, dto.toDomain())
+                .thenReturn(ResponseEntity.noContent().build());
+    }
+
     public URI buildUri(String id) {
         return UriComponentsBuilder.fromUriString("/webflux/v1/products")
                 .path("/{id}")

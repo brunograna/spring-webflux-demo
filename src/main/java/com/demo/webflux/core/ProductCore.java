@@ -69,6 +69,20 @@ public class ProductCore implements ProductPortIn {
     }
 
     @Override
+    public Mono<Void> update(String id, Product p) {
+        this.logger.info("update; start; id=\"{}\"; product=\"{}\";", id, p);
+
+        var result =this.database.findById(id)
+                .switchIfEmpty(Mono.error(new NotFoundException()))
+                .flatMap(product -> this.database.save(product.update(p)))
+                .then();
+
+        this.logger.info("update; end; success; id=\"{}\"; product=\"{}\";", id, p);
+
+        return result;
+    }
+
+    @Override
     public Mono<Void> deleteById(String id) {
         this.logger.info("delete-by-id; start; id=\"{}\";", id);
 

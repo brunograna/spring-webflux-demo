@@ -35,6 +35,22 @@ public class HttpProductHandler {
                 .body(this.productPortIn.findById(id), Product.class);
     }
 
+    public Mono<ServerResponse> update(ServerRequest request) {
+        var id = request.pathVariable("id");
+
+        return request.bodyToMono(ProductDto.class)
+            .map(ProductDto::toDomain)
+            .flatMap(p -> this.productPortIn.update(id, p))
+            .then(ServerResponse.noContent().build());
+    }
+
+    public Mono<ServerResponse> deleteById(ServerRequest request) {
+        var id = request.pathVariable("id");
+
+        return this.productPortIn.deleteById(id)
+                .then(ServerResponse.noContent().build());
+    }
+
     public Mono<ServerResponse> save(ServerRequest request) {
         var body = request.bodyToMono(ProductDto.class);
         var product = body.map(ProductDto::toDomain);

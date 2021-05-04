@@ -3,8 +3,6 @@ package com.demo.webflux.domain;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
-import java.util.UUID;
-
 @Document(collection = "webflux-products")
 public class Product {
 
@@ -56,5 +54,12 @@ public class Product {
                 ", name='" + name + '\'' +
                 ", quantity=" + quantity +
                 '}';
+    }
+
+    public Product update(Product p) {
+        this.quantity = p.getQuantity();
+        this.name = p.getName();
+
+        return this;
     }
 }
