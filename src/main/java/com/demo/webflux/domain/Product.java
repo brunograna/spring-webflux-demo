@@ -1,18 +1,13 @@
 package com.demo.webflux.domain;
 
-import org.springframework.data.annotation.Id;
-import org.springframework.data.mongodb.core.mapping.Document;
+import com.demo.webflux.domain.interfaces.ReadProductData;
+import com.demo.webflux.domain.interfaces.WriteProductData;
 
-@Document(collection = "webflux-products")
 public class Product {
 
-    @Id
-    private String id;
-    private String name;
-    private Integer quantity;
-
-    public Product() {
-    }
+    private final String id;
+    private final String name;
+    private final Integer quantity;
 
     public Product(String id, String name, Integer quantity) {
         this.id = id;
@@ -24,42 +19,23 @@ public class Product {
         return id;
     }
 
-    public Product setId(String id) {
-        this.id = id;
-        return this;
-    }
-
     public String getName() {
         return name;
-    }
-
-    public Product setName(String name) {
-        this.name = name;
-        return this;
     }
 
     public Integer getQuantity() {
         return quantity;
     }
 
-    public Product setQuantity(Integer quantity) {
-        this.quantity = quantity;
-        return this;
+    public Product update(WriteProductData p) {
+        return new Product(this.id, p.getName(), p.getQuantity());
     }
 
-    @Override
-    public String toString() {
-        return "Product{" +
-                "id='" + id + '\'' +
-                ", name='" + name + '\'' +
-                ", quantity=" + quantity +
-                '}';
+    public static Product from(ReadProductData p) {
+        return new Product(p.getId(), p.getName(), p.getQuantity());
     }
 
-    public Product update(Product p) {
-        this.quantity = p.getQuantity();
-        this.name = p.getName();
-
-        return this;
+    public static Product from(WriteProductData p) {
+        return new Product(null, p.getName(), p.getQuantity());
     }
 }

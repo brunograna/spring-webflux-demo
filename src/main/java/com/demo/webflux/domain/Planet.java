@@ -1,25 +1,21 @@
 package com.demo.webflux.domain;
 
-public class Planet {
-    private String name;
-    private String terrain;
+import com.demo.webflux.domain.interfaces.ReadPlanetData;
 
+public class Planet {
+    private final String name;
+    private final String terrain;
+
+    public Planet(String name, String terrain) {
+        this.name = name;
+        this.terrain = terrain;
+    }
     public String getName() {
         return name;
     }
 
-    public Planet setName(String name) {
-        this.name = name;
-        return this;
-    }
-
     public String getTerrain() {
         return terrain;
-    }
-
-    public Planet setTerrain(String terrain) {
-        this.terrain = terrain;
-        return this;
     }
 
     @Override
@@ -28,5 +24,9 @@ public class Planet {
                 "name='" + name + '\'' +
                 ", terrain='" + terrain + '\'' +
                 '}';
+    }
+
+    public static Planet from(ReadPlanetData planetData) {
+        return new Planet(planetData.getName(), planetData.getTerrain());
     }
 }

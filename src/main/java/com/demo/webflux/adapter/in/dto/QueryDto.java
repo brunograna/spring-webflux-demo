@@ -1,5 +1,6 @@
-package com.demo.webflux.domain;
+package com.demo.webflux.adapter.in.dto;
 
+import com.demo.webflux.domain.interfaces.QueryData;
 import org.springframework.data.mongodb.core.query.Criteria;
 import org.springframework.data.mongodb.core.query.Query;
 
@@ -9,7 +10,7 @@ import javax.validation.constraints.PositiveOrZero;
 
 import static org.apache.commons.lang3.ObjectUtils.isEmpty;
 
-public class QueryDto {
+public class QueryDto implements QueryData {
 
     @PositiveOrZero
     private final Integer page;

@@ -12,6 +12,7 @@ import org.springframework.web.server.ServerWebInputException;
 import javax.validation.ConstraintViolationException;
 
 
+// Only works for @Controller and @RestController classes, Functional Endpoints are not covered
 @ControllerAdvice
 public class HttpControllerAdvice {
 

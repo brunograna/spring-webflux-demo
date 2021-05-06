@@ -1,9 +1,9 @@
 package com.demo.webflux.adapter.in;
 
 import com.demo.webflux.adapter.in.dto.ProductDto;
-import com.demo.webflux.domain.PageDto;
+import com.demo.webflux.adapter.in.dto.QueryDto;
+import com.demo.webflux.domain.Pagination;
 import com.demo.webflux.domain.Product;
-import com.demo.webflux.domain.QueryDto;
 import com.demo.webflux.port.in.ProductPortIn;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -29,7 +29,7 @@ public class HttpProductAdapterIn {
     }
 
     @GetMapping
-    public Mono<PageDto<Product>> findAll(
+    public Mono<Pagination<Product>> findAll(
             @RequestParam(name = "page", defaultValue = "0", required = false)
             @PositiveOrZero Integer page,
             @RequestParam(name = "per_page", defaultValue = "50", required = false)
@@ -62,14 +62,14 @@ public class HttpProductAdapterIn {
 
     @PostMapping
     public Mono<ResponseEntity<Void>> save(@RequestBody @Valid ProductDto dto) {
-        return this.productPortIn.save(dto.toDomain())
+        return this.productPortIn.save(dto)
                 .map(this::buildUri)
                 .map(uri -> ResponseEntity.created(uri).build());
     }
 
     @PutMapping("{id}")
     public Mono<ResponseEntity<Void>> update(@PathVariable("id") String id, @RequestBody @Valid ProductDto dto) {
-        return this.productPortIn.update(id, dto.toDomain())
+        return this.productPortIn.update(id, dto)
                 .thenReturn(ResponseEntity.noContent().build());
     }
 

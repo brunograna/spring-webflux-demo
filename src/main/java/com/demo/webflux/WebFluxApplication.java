@@ -1,6 +1,6 @@
 package com.demo.webflux;
 
-import com.demo.webflux.domain.Product;
+import com.demo.webflux.adapter.out.dto.MongoProductDto;
 import com.demo.webflux.repository.ProductRepository;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -30,7 +30,7 @@ public class WebFluxApplication implements CommandLineRunner {
 		this.productRepository.deleteAll()
 				.thenMany(
 						Flux.just("Computer", "Cellphone", "Notebook", "Charger", "Monitor", "TV")
-						.map(name -> new Product(UUID.randomUUID().toString(), name, 1))
+						.map(name -> new MongoProductDto(UUID.randomUUID().toString(), name, 1))
 				)
 				.flatMap(productRepository::save)
 				.subscribe(product -> logger.info("Saving on database: {}", product));

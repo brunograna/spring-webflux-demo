@@ -1,8 +1,9 @@
 package com.demo.webflux.adapter.out;
 
-import com.demo.webflux.domain.PageDto;
+import com.demo.webflux.adapter.out.dto.MongoProductDto;
+import com.demo.webflux.domain.Pagination;
 import com.demo.webflux.domain.Product;
-import com.demo.webflux.domain.QueryDto;
+import com.demo.webflux.domain.interfaces.QueryData;
 import com.demo.webflux.port.out.ProductDatabasePortOut;
 import com.demo.webflux.repository.ProductRepository;
 import org.springframework.data.domain.PageRequest;
@@ -29,28 +30,30 @@ public class MongoProductAdapterOut implements ProductDatabasePortOut {
     }
 
     @Override
-    public Mono<PageDto<Product>> findAll(QueryDto queryDto) {
-        return Mono.just(queryDto.toQuery())
+    public Mono<Pagination<Product>> findAll(QueryData queryData) {
+        return Mono.just(queryData.toQuery())
                 .flatMap(this::retrieveCountByQuery)
-                .map(queryAndTotal -> this.buildDatabaseQueryWithPagination(queryDto, queryAndTotal))
+                .map(queryAndTotal -> this.buildDatabaseQueryWithPagination(queryData, queryAndTotal))
                 .flatMap(this::findAllUsingQuery)
-                .map(resultAndTotalPagesAndTotal -> this.buildResponse(queryDto, resultAndTotalPagesAndTotal));
+                .map(resultAndTotalPagesAndTotal -> this.buildResponse(queryData, resultAndTotalPagesAndTotal));
     }
 
     @Override
     public Flux<Product> findAll() {
-        return this.repository.findAll();
+        return this.repository.findAll()
+                .map(Product::from);
     }
 
     @Override
     public Mono<Product> findById(String id) {
-        return this.repository.findById(id);
+        return this.repository.findById(id)
+                .map(Product::from);
     }
 
     @Override
     public Mono<String> save(Product p) {
-        return this.repository.save(p)
-                .map(Product::getId);
+        return this.repository.save(MongoProductDto.from(p))
+                .map(MongoProductDto::getId);
     }
 
     @Override
@@ -58,16 +61,16 @@ public class MongoProductAdapterOut implements ProductDatabasePortOut {
         return this.repository.deleteById(id);
     }
 
-    private Tuple3<Query, Long, Long> buildDatabaseQueryWithPagination(QueryDto queryDto,
+    private Tuple3<Query, Long, Long> buildDatabaseQueryWithPagination(QueryData queryData,
                                                                        Tuple2<Query, Long> queryAndTotal) {
         var query = queryAndTotal.getT1();
         var total = queryAndTotal.getT2();
 
-        int limit = queryDto.getPerPage();
+        int limit = queryData.getPerPage();
 
         var totalPages = total > limit ? Math.floorDiv(total, limit) : 1;
 
-        query.with(PageRequest.of(queryDto.getPage(), limit));
+        query.with(PageRequest.of(queryData.getPage(), limit));
 
         return Mono.zip(
                 Mono.just(query),
@@ -79,23 +82,25 @@ public class MongoProductAdapterOut implements ProductDatabasePortOut {
     private Mono<Tuple2<Query, Long>> retrieveCountByQuery(Query query) {
         return Mono.zip(
                 Mono.just(query),
-                this.mongoTemplate.count(query, Product.class).defaultIfEmpty(0L)
+                this.mongoTemplate.count(query, MongoProductDto.class).defaultIfEmpty(0L)
         );
     }
 
     private Mono<Tuple3<List<Product>, Long, Long>> findAllUsingQuery(Tuple3<Query, Long, Long> queryAndTotalPagesAndTotal) {
         return Mono.zip(
-                this.mongoTemplate.find(queryAndTotalPagesAndTotal.getT1(), Product.class).collectList(),
+                this.mongoTemplate.find(queryAndTotalPagesAndTotal.getT1(), MongoProductDto.class)
+                        .map(Product::from)
+                        .collectList(),
                 Mono.just(queryAndTotalPagesAndTotal.getT2()),
                 Mono.just(queryAndTotalPagesAndTotal.getT3())
         );
     }
 
-    private PageDto<Product> buildResponse(QueryDto queryDto,
-                                           Tuple3<List<Product>, Long, Long> resultAndTotalPagesAndTotal) {
-        return new PageDto<>(
-                queryDto.getPage(),
-                queryDto.getPerPage(),
+    private Pagination<Product> buildResponse(QueryData queryData,
+                                              Tuple3<List<Product>, Long, Long> resultAndTotalPagesAndTotal) {
+        return new Pagination<>(
+                queryData.getPage(),
+                queryData.getPerPage(),
                 resultAndTotalPagesAndTotal.getT2(),
                 resultAndTotalPagesAndTotal.getT3(),
                 resultAndTotalPagesAndTotal.getT1()

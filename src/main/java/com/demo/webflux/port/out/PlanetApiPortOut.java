@@ -1,9 +1,9 @@
 package com.demo.webflux.port.out;
 
-import com.demo.webflux.adapter.out.dto.SwapiPlanetResponseDto;
-import reactor.core.publisher.Mono;
+import com.demo.webflux.domain.Planet;
+import reactor.core.publisher.Flux;
 
 public interface PlanetApiPortOut {
 
-    Mono<SwapiPlanetResponseDto> findAll();
+    Flux<Planet> findAll();
 }

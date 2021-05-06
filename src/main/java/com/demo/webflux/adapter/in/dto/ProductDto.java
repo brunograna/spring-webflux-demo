@@ -1,6 +1,6 @@
 package com.demo.webflux.adapter.in.dto;
 
-import com.demo.webflux.domain.Product;
+import com.demo.webflux.domain.interfaces.WriteProductData;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import org.springframework.validation.annotation.Validated;
@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PositiveOrZero;
 
 @Validated
-public class ProductDto extends SelfValidator<ProductDto> {
+public class ProductDto extends SelfValidator<ProductDto> implements WriteProductData {
 
     @NotBlank
     private final String name;
@@ -31,12 +31,5 @@ public class ProductDto extends SelfValidator<ProductDto> {
     public Integer getQuantity() {
         return quantity;
     }
-
-    public Product toDomain() {
-        return new Product()
-                .setName(this.name)
-                .setQuantity(this.quantity);
-    }
-
 
 }

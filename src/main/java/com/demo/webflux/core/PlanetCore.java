@@ -1,6 +1,5 @@
 package com.demo.webflux.core;
 
-import com.demo.webflux.adapter.out.dto.SwapiPlanetResponseDto;
 import com.demo.webflux.domain.Planet;
 import com.demo.webflux.port.in.PlanetPortIn;
 import com.demo.webflux.port.out.PlanetApiPortOut;
@@ -24,11 +23,10 @@ public class PlanetCore implements PlanetPortIn {
     public Flux<Planet> findAll() {
         this.logger.info("find-all; start;");
 
-        var result =  this.planetApiPortOut.findAll()
-                        .map(SwapiPlanetResponseDto::getResults)
-                        .flatMapMany(Flux::fromIterable);
+        var result =  this.planetApiPortOut.findAll();
 
         this.logger.info("find-all; end; success;");
+
         return result;
     }
 }

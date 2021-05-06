@@ -1,7 +1,7 @@
 package com.demo.webflux.adapter.in;
 
 import com.demo.webflux.adapter.in.dto.ProductDto;
-import com.demo.webflux.domain.Product;
+import com.demo.webflux.adapter.out.dto.MongoProductDto;
 import com.demo.webflux.port.in.ProductPortIn;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
@@ -9,7 +9,6 @@ import org.springframework.web.reactive.function.BodyInserters;
 import org.springframework.web.reactive.function.server.ServerRequest;
 import org.springframework.web.reactive.function.server.ServerResponse;
 import reactor.core.publisher.Mono;
-
 
 
 @Component
@@ -24,7 +23,7 @@ public class HttpProductHandler {
     public Mono<ServerResponse> findAll(ServerRequest request) {
         return ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(this.productPortIn.findAll(), Product.class);
+                .body(this.productPortIn.findAll(), MongoProductDto.class);
     }
 
     public Mono<ServerResponse> findById(ServerRequest request) {
@@ -32,14 +31,13 @@ public class HttpProductHandler {
 
         return ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(this.productPortIn.findById(id), Product.class);
+                .body(this.productPortIn.findById(id), MongoProductDto.class);
     }
 
     public Mono<ServerResponse> update(ServerRequest request) {
         var id = request.pathVariable("id");
 
         return request.bodyToMono(ProductDto.class)
-            .map(ProductDto::toDomain)
             .flatMap(p -> this.productPortIn.update(id, p))
             .then(ServerResponse.noContent().build());
     }
@@ -53,10 +51,9 @@ public class HttpProductHandler {
 
     public Mono<ServerResponse> save(ServerRequest request) {
         var body = request.bodyToMono(ProductDto.class);
-        var product = body.map(ProductDto::toDomain);
 
         return ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)
-                .body(BodyInserters.fromPublisher(product.flatMap(productPortIn::save), String.class));
+                .body(BodyInserters.fromPublisher(body.flatMap(productPortIn::save), String.class));
     }
 }
