@@ -1,6 +1,6 @@
 package com.demo.webflux.adapter.in;
 
-import com.demo.webflux.adapter.in.dto.ProductDto;
+import com.demo.webflux.adapter.in.dto.WriteProductDto;
 import com.demo.webflux.adapter.out.dto.MongoProductDto;
 import com.demo.webflux.port.in.ProductPortIn;
 import org.springframework.http.MediaType;
@@ -37,7 +37,7 @@ public class HttpProductHandler {
     public Mono<ServerResponse> update(ServerRequest request) {
         var id = request.pathVariable("id");
 
-        return request.bodyToMono(ProductDto.class)
+        return request.bodyToMono(WriteProductDto.class)
             .flatMap(p -> this.productPortIn.update(id, p))
             .then(ServerResponse.noContent().build());
     }
@@ -50,7 +50,7 @@ public class HttpProductHandler {
     }
 
     public Mono<ServerResponse> save(ServerRequest request) {
-        var body = request.bodyToMono(ProductDto.class);
+        var body = request.bodyToMono(WriteProductDto.class);
 
         return ServerResponse.ok()
                 .contentType(MediaType.APPLICATION_JSON)

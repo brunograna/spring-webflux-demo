@@ -9,7 +9,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.PositiveOrZero;
 
 @Validated
-public class ProductDto extends SelfValidator<ProductDto> implements WriteProductData {
+public class WriteProductDto extends SelfValidator<WriteProductDto> implements WriteProductData {
 
     @NotBlank
     private final String name;
@@ -18,8 +18,8 @@ public class ProductDto extends SelfValidator<ProductDto> implements WriteProduc
     private final Integer quantity;
 
     @JsonCreator
-    public ProductDto(@JsonProperty("name") String name,
-                      @JsonProperty("quantity") Integer quantity) {
+    public WriteProductDto(@JsonProperty("name") String name,
+                           @JsonProperty("quantity") Integer quantity) {
         this.name = name;
         this.quantity = quantity;
     }

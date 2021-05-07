@@ -15,13 +15,9 @@ import java.util.List;
 public class Pagination<T> {
     
     private final Integer page;
-    
     private final Integer perPage;
-    
     private final Long totalPages;
-    
     private final Long total;
-    
     private final List<T> data;
     
     public Pagination(Integer page,

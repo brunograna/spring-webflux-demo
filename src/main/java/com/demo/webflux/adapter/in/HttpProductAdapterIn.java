@@ -1,7 +1,7 @@
 package com.demo.webflux.adapter.in;
 
-import com.demo.webflux.adapter.in.dto.ProductDto;
 import com.demo.webflux.adapter.in.dto.QueryDto;
+import com.demo.webflux.adapter.in.dto.WriteProductDto;
 import com.demo.webflux.domain.Pagination;
 import com.demo.webflux.domain.Product;
 import com.demo.webflux.port.in.ProductPortIn;
@@ -61,14 +61,14 @@ public class HttpProductAdapterIn {
     }
 
     @PostMapping
-    public Mono<ResponseEntity<Void>> save(@RequestBody @Valid ProductDto dto) {
+    public Mono<ResponseEntity<Void>> save(@RequestBody @Valid WriteProductDto dto) {
         return this.productPortIn.save(dto)
                 .map(this::buildUri)
                 .map(uri -> ResponseEntity.created(uri).build());
     }
 
     @PutMapping("{id}")
-    public Mono<ResponseEntity<Void>> update(@PathVariable("id") String id, @RequestBody @Valid ProductDto dto) {
+    public Mono<ResponseEntity<Void>> update(@PathVariable("id") String id, @RequestBody @Valid WriteProductDto dto) {
         return this.productPortIn.update(id, dto)
                 .thenReturn(ResponseEntity.noContent().build());
     }
